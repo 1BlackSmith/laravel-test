@@ -1,6 +1,15 @@
 <?php
 
-use Illuminate\Http\Request;
+declare(strict_types=1);
+
+use App\Http\Controllers\Post\CreatePostsEndpoint;
+use App\Http\Controllers\Post\DeletePostsEndpoint;
+use App\Http\Controllers\Post\GetAllPostsEndpoint;
+use App\Http\Controllers\Post\UpdatePostsEndpoint;
+use App\Http\Controllers\User\GetAllUsersEndpoint;
+use App\Http\Controllers\User\LoginEndpoint;
+use App\Http\Controllers\User\RegistrationEndpoint;
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +23,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/login', LoginEndpoint::class);
+Route::post('/register', RegistrationEndpoint::class);
+Route::get('/users', GetAllUsersEndpoint::class);
+
+Route::get('/posts', GetAllPostsEndpoint::class);
+Route::post('/posts', CreatePostsEndpoint::class)->can('create', Post::class);
+Route::put('/posts/{post}', UpdatePostsEndpoint::class)->can('update', 'post');
+Route::delete('/posts/{post}', DeletePostsEndpoint::class)->can('update', 'post');
